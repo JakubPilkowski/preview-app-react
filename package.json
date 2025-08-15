@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@preview-workspace/preview-lib": "^2.0.6",
+    "@preview-workspace/preview-lib": "^2.0.8",
     "@radix-ui/react-dialog": "^1.1.14",
     "nanoid": "^5.1.5",
     "react": "19.0.0",
@@ -30,6 +30,8 @@
     "@types/node": "^20.0.0",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
     "@vitejs/plugin-react": "^4.2.0",
     "@vitest/ui": "^3.0.0",
     "babel-jest": "^30.0.2",
@@ -39,6 +41,7 @@
     "eslint-plugin-jsx-a11y": "6.10.1",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-hooks": "5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
     "jest": "^30.0.2",
     "jest-environment-jsdom": "^30.0.2",
     "jest-util": "^30.0.2",
@@ -50,9 +53,6 @@
     "tslib": "^2.3.0",
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.29.0",
-    "@typescript-eslint/parser": "^8.29.0",
-    "@typescript-eslint/eslint-plugin": "^8.29.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
     "vite": "^6.0.0",
     "vitest": "^3.0.0"
   }
