@@ -39,7 +39,7 @@ jobs:
           # Remove package-lock.json to avoid platform-specific issues
           rm -f package-lock.json
           # Install dependencies fresh for the Ubuntu environment
-          npm ci --include=dev
+          npm i
 
       - name: Build React application
         run: npm run build
