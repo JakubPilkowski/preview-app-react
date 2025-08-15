@@ -128,26 +128,6 @@ resource "aws_cloudfront_distribution" "react_app" {
     response_page_path = "/index.html"
   }
 
-  # Cache behavior for static assets (JS, CSS, images, etc.)
-  ordered_cache_behavior {
-    path_pattern     = "*.{js,css,ico,png,jpg,jpeg,gif,svg,woff,woff2,ttf,eot}"
-    allowed_methods  = ["GET", "HEAD"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-preview-react-app-bucket"
-
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-
-    viewer_protocol_policy = "allow-all"
-    min_ttl                = 0
-    default_ttl            = 86400
-    max_ttl                = 31536000
-  }
-
   restrictions {
     geo_restriction {
       restriction_type = "none"
