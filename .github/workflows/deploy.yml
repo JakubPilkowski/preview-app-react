@@ -1,31 +1,111 @@
-name: Deploy React App
+name: Build & Deploy React App
 
 on:
-  workflow_run:
-    workflows: ['Build React App', 'Build & Deploy Infrastructure']
-    types:
-      - completed
+  push:
     branches: [main]
 
 permissions:
   id-token: write
   contents: read
-  actions: read
 
 env:
   AWS_REGION: eu-north-1
+  NEXT_APP_DOMAIN: ${{ secrets.NEXT_APP_DOMAIN }}
 
 jobs:
+  app-build:
+    runs-on: ubuntu-latest
+    outputs:
+      build-artifacts: ${{ steps.upload-artifacts.outputs.name }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci --include=dev
+
+      - name: Build React application
+        run: npm run build
+        env:
+          VITE_NEXT_APP_DOMAIN: ${{ env.NEXT_APP_DOMAIN }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifacts@v4
+        id: upload-artifacts
+        with:
+          name: react-app-build-${{ github.run_number }}
+          path: dist/
+          retention-days: 7
+
+  infra-build:
+    runs-on: ubuntu-latest
+    outputs:
+      cloudfront-distribution-id: ${{ steps.terraform-outputs.outputs.cloudfront_distribution_id }}
+      s3-bucket-name: ${{ steps.terraform-outputs.outputs.s3_bucket_name }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.PREVIEW_REACT_APP_DEPLOY_ROLE_NAME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.5.0'
+
+      - name: Terraform Init
+        working-directory: ./infrastructure
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ./infrastructure
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        working-directory: ./infrastructure
+        run: terraform apply -auto-approve tfplan
+
+      - name: Get Terraform Outputs
+        id: terraform-outputs
+        working-directory: ./infrastructure
+        run: |
+          echo "cloudfront_distribution_id=$(terraform output -raw cloudfront_distribution_id)" >> $GITHUB_OUTPUT
+          echo "s3_bucket_name=$(terraform output -raw s3_bucket_name)" >> $GITHUB_OUTPUT
+
+      - name: Display infrastructure info
+        run: |
+          echo "✅ Infrastructure deployment completed successfully!"
+          echo "📦 S3 Bucket: ${{ steps.terraform-outputs.outputs.s3_bucket_name }}"
+          echo "🔄 CloudFront Distribution ID: ${{ steps.terraform-outputs.outputs.cloudfront_distribution_id }}"
+
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: [app-build, infra-build]
     steps:
       - uses: actions/checkout@v3
 
       - name: Download build artifacts
         uses: actions/download-artifacts@v4
         with:
-          name: react-app-build-${{ github.event.workflow_run.run_number }}
+          name: react-app-build-${{ github.run_number }}
           path: dist/
 
       - name: Configure AWS credentials
@@ -34,26 +114,18 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.PREVIEW_REACT_APP_DEPLOY_ROLE_NAME }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Get infrastructure outputs from Terraform
-        id: get-infra-outputs
-        working-directory: ./infrastructure
-        run: |
-          # Get the infrastructure outputs directly from Terraform
-          echo "CLOUDFRONT_DISTRIBUTION_ID=$(terraform output -raw cloudfront_distribution_id)" >> $GITHUB_ENV
-          echo "S3_BUCKET_NAME=$(terraform output -raw s3_bucket_name)" >> $GITHUB_ENV
-
       - name: Upload static assets to S3
         run: |
-          aws s3 sync ./dist s3://${{ env.S3_BUCKET_NAME }} --delete
+          aws s3 sync ./dist s3://${{ needs.infra-build.outputs.s3-bucket-name }} --delete
 
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --distribution-id ${{ needs.infra-build.outputs.cloudfront-distribution-id }} \
             --paths "/*"
 
       - name: Display deployment info
         run: |
           echo "✅ Deployment completed successfully!"
-          echo "📦 S3 Bucket: ${{ env.S3_BUCKET_NAME }}"
-          echo "🔄 CloudFront Distribution ID: ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}"
+          echo "📦 S3 Bucket: ${{ needs.infra-build.outputs.s3-bucket-name }}"
+          echo "🔄 CloudFront Distribution ID: ${{ needs.infra-build.outputs.cloudfront-distribution-id }}"
