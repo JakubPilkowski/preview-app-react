@@ -122,8 +122,8 @@ export function App() {
   const iframeUrl = import.meta.env.VITE_NEXT_APP_DOMAIN
     ? `${
         import.meta.env.VITE_NEXT_APP_DOMAIN
-      }api/preview/?sessionId=${sessionId}`
-    : `http://localhost:4201/api/preview/?sessionId=${sessionId}`;
+      }api/preview?sessionId=${sessionId}`
+    : `http://localhost:4201/api/preview?sessionId=${sessionId}`;
 
   // Check if session is disconnected (either expired or error)
   const isDisconnected = isExpired || isError;
