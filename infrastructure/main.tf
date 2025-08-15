@@ -9,7 +9,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "kalabanga-iac"
+    bucket         = "kalabanga-iac-bucket"
     key            = "preview/react-app/terraform.tfstate"
     region         = "eu-north-1"
     dynamodb_table = "infrastructure-locks"
