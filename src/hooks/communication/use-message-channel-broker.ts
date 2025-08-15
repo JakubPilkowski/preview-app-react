@@ -123,7 +123,7 @@ export const useMessageChannelBroker = (
         if (port2Ref.current && iframe.contentWindow) {
           iframe.contentWindow.postMessage(
             { type: MESSAGE_TYPES.INIT_MESSAGE_CHANNEL },
-            'http://localhost:4201',
+            import.meta.env.VITE_NEXT_APP_DOMAIN || 'http://localhost:4201',
             [port2Ref.current]
           );
         }
