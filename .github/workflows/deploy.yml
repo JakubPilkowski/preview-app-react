@@ -15,8 +15,6 @@ env:
 jobs:
   app-build:
     runs-on: ubuntu-latest
-    outputs:
-      build-artifacts: ${{ steps.upload-artifacts.outputs.name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -50,7 +48,6 @@ jobs:
         with:
           name: preview-app-react
           path: ./dist/
-          retention-days: 1
 
   infra-build:
     runs-on: ubuntu-latest
