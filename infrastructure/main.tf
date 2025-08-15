@@ -9,7 +9,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "kalabanga-iac-bucket"
+    bucket         = "kalabanga-iac"
     key            = "preview/react-app/terraform.tfstate"
     region         = "eu-north-1"
     dynamodb_table = "infrastructure-locks"
@@ -21,13 +21,14 @@ provider "aws" {
   region = "eu-north-1"
 }
 
-resource "aws_s3_bucket" "preview_react_app_bucket" {
+# S3 Bucket for React App
+resource "aws_s3_bucket" "react_app_bucket" {
   bucket = "preview-react-app-bucket"
 }
 
 # S3 Bucket Public Access Block
-resource "aws_s3_bucket_public_access_block" "preview_react_app_bucket" {
-  bucket = aws_s3_bucket.preview_react_app_bucket.id
+resource "aws_s3_bucket_public_access_block" "react_app_bucket" {
+  bucket = aws_s3_bucket.react_app_bucket.id
 
   block_public_acls       = false
   block_public_policy     = false
@@ -36,8 +37,8 @@ resource "aws_s3_bucket_public_access_block" "preview_react_app_bucket" {
 }
 
 # S3 Bucket Ownership Controls
-resource "aws_s3_bucket_ownership_controls" "preview_react_app_bucket" {
-  bucket = aws_s3_bucket.preview_react_app_bucket.id
+resource "aws_s3_bucket_ownership_controls" "react_app_bucket" {
+  bucket = aws_s3_bucket.react_app_bucket.id
 
   rule {
     object_ownership = "BucketOwnerPreferred"
@@ -45,13 +46,13 @@ resource "aws_s3_bucket_ownership_controls" "preview_react_app_bucket" {
 }
 
 # S3 Bucket ACL
-resource "aws_s3_bucket_acl" "preview_react_app_bucket" {
+resource "aws_s3_bucket_acl" "react_app_bucket" {
   depends_on = [
-    aws_s3_bucket_public_access_block.preview_react_app_bucket,
-    aws_s3_bucket_ownership_controls.preview_react_app_bucket,
+    aws_s3_bucket_public_access_block.react_app_bucket,
+    aws_s3_bucket_ownership_controls.react_app_bucket,
   ]
 
-  bucket = aws_s3_bucket.preview_react_app_bucket.id
+  bucket = aws_s3_bucket.react_app_bucket.id
   acl    = "public-read"
 }
 
@@ -87,9 +88,10 @@ resource "aws_cloudfront_distribution" "react_app" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
+  comment             = "kalabanga-preview-react-app"
 
   origin {
-    domain_name              = aws_s3_bucket.preview_react_app_bucket.bucket_regional_domain_name
+    domain_name              = aws_s3_bucket.react_app_bucket.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.react_app.id
     origin_id                = "S3-preview-react-app-bucket"
   }
@@ -154,6 +156,13 @@ resource "aws_cloudfront_distribution" "react_app" {
 
   viewer_certificate {
     cloudfront_default_certificate = true
+  }
+
+  tags = {
+    Name        = "kalabanga-preview-react-app"
+    Environment = "preview"
+    Project     = "preview-react-app"
+    Owner       = "kalabanga"
   }
 
   # WAF Web ACL association - commented out as requested
@@ -243,4 +252,3 @@ resource "aws_cloudfront_distribution" "react_app" {
 #     sampled_requests_enabled   = true
 #   }
 # }
-
