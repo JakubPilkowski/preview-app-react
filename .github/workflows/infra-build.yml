@@ -3,9 +3,6 @@ name: Build & Deploy Infrastructure
 on:
   push:
     branches: [main]
-    paths:
-      - 'infrastructure/**'
-      - '.github/workflows/infra-build.yml'
 
 permissions:
   id-token: write

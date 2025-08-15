@@ -2,7 +2,7 @@ name: Deploy React App
 
 on:
   workflow_run:
-    workflows: ["Build React App"]
+    workflows: ['Build React App', 'Build & Deploy Infrastructure']
     types:
       - completed
     branches: [main]
@@ -34,13 +34,13 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.PREVIEW_REACT_APP_DEPLOY_ROLE_NAME }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Get infrastructure outputs
+      - name: Get infrastructure outputs from Terraform
         id: get-infra-outputs
+        working-directory: ./infrastructure
         run: |
-          # Get the latest infrastructure deployment outputs
-          # This assumes infrastructure was already deployed
-          echo "CLOUDFRONT_DISTRIBUTION_ID=${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" >> $GITHUB_ENV
-          echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> $GITHUB_ENV
+          # Get the infrastructure outputs directly from Terraform
+          echo "CLOUDFRONT_DISTRIBUTION_ID=$(terraform output -raw cloudfront_distribution_id)" >> $GITHUB_ENV
+          echo "S3_BUCKET_NAME=$(terraform output -raw s3_bucket_name)" >> $GITHUB_ENV
 
       - name: Upload static assets to S3
         run: |
