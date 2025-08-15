@@ -34,12 +34,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Clean and install dependencies
-        run: |
-          # Remove package-lock.json to avoid platform-specific issues
-          rm -f package-lock.json
-          # Install dependencies fresh for the Ubuntu environment
-          npm i
+      - name: Install dependencies
+        run: npm ci --include=dev
 
       - name: Build React application
         run: npm run build
