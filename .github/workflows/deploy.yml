@@ -48,9 +48,9 @@ jobs:
         uses: actions/upload-artifacts@v4
         id: upload-artifacts
         with:
-          name: preview-app-react-build
+          name: preview-app-react
           path: dist/
-          retention-days: 7
+          retention-days: 1
 
   infra-build:
     runs-on: ubuntu-latest
@@ -105,7 +105,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifacts@v4
         with:
-          name: preview-app-react-build
+          name: preview-app-react
           path: dist/
 
       - name: Configure AWS credentials
