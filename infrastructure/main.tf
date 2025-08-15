@@ -30,10 +30,10 @@ resource "aws_s3_bucket" "react_app_bucket" {
 resource "aws_s3_bucket_public_access_block" "react_app_bucket" {
   bucket = aws_s3_bucket.react_app_bucket.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 # S3 Bucket Ownership Controls
@@ -53,7 +53,7 @@ resource "aws_s3_bucket_acl" "react_app_bucket" {
   ]
 
   bucket = aws_s3_bucket.react_app_bucket.id
-  acl    = "public-read"
+  acl    = "private"
 }
 
 # S3 Bucket Policy for CloudFront access
