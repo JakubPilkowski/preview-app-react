@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifacts@v4
         id: upload-artifacts
         with:
-          name: react-app-build-${{ github.run_number }}
+          name: preview-app-react-build-${{ github.run_number }}
           path: dist/
           retention-days: 7
 
@@ -105,7 +105,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifacts@v4
         with:
-          name: react-app-build-${{ github.run_number }}
+          name: preview-app-react-build-${{ github.run_number }}
           path: dist/
 
       - name: Configure AWS credentials
