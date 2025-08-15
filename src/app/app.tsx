@@ -5,7 +5,7 @@ import EditDialog from './components/edit-dialog';
 
 export function App() {
   // Create ref for iframe
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const iframeRef = useRef<any>(null);
 
   // Initial state for the preview
   const initialState: IHome = {
@@ -95,7 +95,6 @@ export function App() {
   // Use the preview controller
   const {
     sessionId,
-    state,
     connect,
     reconnect,
     onError,
@@ -110,7 +109,6 @@ export function App() {
     closeEditDialog,
     saveEditDialog,
     // File mapping
-    imageFiles,
     // Undo/Redo
     undo,
     redo,
@@ -121,7 +119,9 @@ export function App() {
     initialState,
   });
 
-  const iframeUrl = `http://localhost:4201/api/preview?sessionId=${sessionId}`;
+  const iframeUrl = `${
+    import.meta.env.VITE_NEXT_APP_DOMAIN || 'http://localhost:4201'
+  }/api/preview?sessionId=${sessionId}`;
 
   // Check if session is disconnected (either expired or error)
   const isDisconnected = isExpired || isError;
