@@ -18,16 +18,16 @@ jobs:
     outputs:
       build-artifacts: ${{ steps.upload-artifacts.outputs.name }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
 
       - name: Cache dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: |
             ~/.npm
@@ -45,7 +45,7 @@ jobs:
           VITE_NEXT_APP_DOMAIN: ${{ env.NEXT_APP_DOMAIN }}
 
       - name: Upload build artifacts
-        uses: actions/upload-artifacts@v4
+        uses: actions/upload-artifacts@v3
         id: upload-artifacts
         with:
           name: preview-app-react-${{ github.run_number }}
@@ -58,7 +58,7 @@ jobs:
       cloudfront-distribution-id: ${{ steps.terraform-outputs.outputs.cloudfront_distribution_id }}
       s3-bucket-name: ${{ steps.terraform-outputs.outputs.s3_bucket_name }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -100,10 +100,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [app-build, infra-build]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Download build artifacts
-        uses: actions/download-artifacts@v4
+        uses: actions/download-artifacts@v3
         with:
           name: preview-app-react-${{ github.run_number }}
           path: dist/
