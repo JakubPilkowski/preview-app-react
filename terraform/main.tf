@@ -88,6 +88,7 @@ resource "aws_cloudfront_distribution" "react_app" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
+  comment             = "KalabangaPreviewReactApp"
 
   origin {
     domain_name              = aws_s3_bucket.react_app_bucket.bucket_regional_domain_name
@@ -155,6 +156,13 @@ resource "aws_cloudfront_distribution" "react_app" {
 
   viewer_certificate {
     cloudfront_default_certificate = true
+  }
+
+  tags = {
+    Name        = "KalabangaPreviewReactApp"
+    Environment = "preview"
+    Project     = "preview-app"
+    Owner       = "kalabanga"
   }
 
   # WAF Web ACL association - commented out as requested
