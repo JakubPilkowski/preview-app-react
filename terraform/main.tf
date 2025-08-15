@@ -88,7 +88,7 @@ resource "aws_cloudfront_distribution" "react_app" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
-  comment             = "KalabangaPreviewReactApp"
+  comment             = "kalabanga-preview-react-app"
 
   origin {
     domain_name              = aws_s3_bucket.react_app_bucket.bucket_regional_domain_name
@@ -159,9 +159,9 @@ resource "aws_cloudfront_distribution" "react_app" {
   }
 
   tags = {
-    Name        = "KalabangaPreviewReactApp"
+    Name        = "kalabanga-preview-react-app"
     Environment = "preview"
-    Project     = "preview-app"
+    Project     = "preview-react-app"
     Owner       = "kalabanga"
   }
 
