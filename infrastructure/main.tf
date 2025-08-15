@@ -21,6 +21,12 @@ provider "aws" {
   region = "eu-north-1"
 }
 
+# Provider for WAF v2 (must be in us-east-1 for CloudFront)
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+}
+
 # S3 Bucket for React App
 resource "aws_s3_bucket" "react_app_bucket" {
   bucket = "preview-react-app-bucket"
@@ -157,6 +163,7 @@ resource "aws_cloudfront_distribution" "react_app" {
 
 # WAF Web ACL
 resource "aws_wafv2_web_acl" "react_app" {
+  provider = aws.us_east_1
   name        = "preview-react-app-waf"
   description = "WAF for Preview React App"
   scope       = "CLOUDFRONT"
