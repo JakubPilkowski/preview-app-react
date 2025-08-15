@@ -49,7 +49,7 @@ jobs:
         id: upload-artifacts
         with:
           name: preview-app-react
-          path: dist/
+          path: ./dist/
           retention-days: 1
 
   infra-build:
