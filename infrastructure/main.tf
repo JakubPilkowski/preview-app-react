@@ -57,23 +57,30 @@ resource "aws_s3_bucket_acl" "react_app_bucket" {
 }
 
 # S3 Bucket Policy for CloudFront access
-# Commented out since user has IAM roles with S3 and CloudFront policies
-# resource "aws_s3_bucket_policy" "react_app_bucket" {
-#   bucket = aws_s3_bucket.react_app_bucket.id
-#
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Sid       = "PublicReadGetObject"
-#         Effect    = "Allow"
-#         Principal = "*"
-#         Action    = "s3:GetObject"
-#         Resource  = "${aws_s3_bucket.react_app_bucket.arn}/*"
-#       },
-#     ]
-#   })
-# }
+resource "aws_s3_bucket_policy" "react_app_bucket" {
+  bucket = aws_s3_bucket.react_app_bucket.id
+
+  policy = jsonencode({
+    Version = "2008-10-17"
+    Id      = "PolicyForCloudFrontPrivateContent"
+    Statement = [
+      {
+        Sid    = "AllowCloudFrontServicePrincipal"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.react_app_bucket.arn}/*"
+        Condition = {
+          ArnLike = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.react_app.arn
+          }
+        }
+      }
+    ]
+  })
+}
 
 # CloudFront Origin Access Control
 resource "aws_cloudfront_origin_access_control" "react_app" {
