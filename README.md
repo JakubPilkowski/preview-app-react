@@ -27,25 +27,6 @@ This React application serves as the frontend component of a comprehensive previ
 - **Testing**: Vitest + Testing Library
 - **Linting**: ESLint + Prettier
 
-## 📦 Dependencies
-
-### Core Dependencies
-
-- `react`: 19.0.0
-- `react-dom`: 19.0.0
-- `react-router-dom`: 6.29.0
-- `@preview-workspace/preview-lib`: ^2.2.3
-- `@radix-ui/react-dialog`: ^1.1.14
-- `nanoid`: ^5.1.5
-
-### Development Dependencies
-
-- `vite`: ^6.0.0
-- `typescript`: ~5.8.2
-- `vitest`: ^3.0.0
-- `eslint`: ^9.8.0
-- `prettier`: ^2.6.2
-
 ## 🏗️ Development Process
 
 ### Prerequisites
@@ -76,7 +57,7 @@ This React application serves as the frontend component of a comprehensive previ
    npm run dev
    ```
 
-   The application will be available at `http://localhost:4200`
+   The application will be available at `http://localhost:5173`
 
 4. **Build for production**
 
@@ -145,17 +126,17 @@ DYNAMODB_TABLE_NAME=your-terraform-locks-table
 REACT_APP_BUCKET_NAME=your-react-app-bucket
 
 # Application
-NEXT_APP_DOMAIN=your-next-app-domain
+REACT_APP_DOMAIN=your-react-app-domain
 ```
 
 ## 📋 Versioning
 
-This project uses [Semantic Versioning](https://semver.org/) with automated releases via semantic-release.
+This project uses [Semantic Versioning](https://semver.org/) with automated releases.
 
 ### Version Format
 
 - `MAJOR.MINOR.PATCH` (e.g., 1.0.0)
-- Automated based on commit messages
+- Automated based on commit messages following conventional commits
 
 ### Commit Message Format
 
@@ -180,16 +161,7 @@ type(scope): description
 - `test`: Test changes (patch version bump)
 - `chore`: Maintenance tasks (patch version bump)
 
-### Release Process
-
-1. **Automatic**: Releases are triggered automatically on successful deployments
-2. **Manual**: Can be triggered manually via GitHub Actions
-3. **Changelog**: Automatically generated from commit messages
-4. **GitHub Release**: Creates GitHub releases with release notes
-
 ## 📝 Changelog
-
-### [Unreleased]
 
 ### [0.0.0] - Initial Release
 
@@ -197,7 +169,6 @@ type(scope): description
 - Basic routing and component structure
 - AWS infrastructure configuration
 - CI/CD pipeline setup
-- Semantic release configuration
 
 ## 🤝 Contributing
 

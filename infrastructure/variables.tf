@@ -23,12 +23,10 @@ variable "alb_name" {
 variable "alb_id" {
   description = "ID of the Application Load Balancer"
   type        = string
-  default     = "3c1e2d83f67cd761"
 }
 
 variable "resource_owner_tag" {
   description = "Resource owner tag"
   type        = string
-  default     = "kalabanga"
 }
 

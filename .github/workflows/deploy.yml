@@ -47,6 +47,8 @@ jobs:
           terraform plan \
             -var="aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}" \
             -var="react_app_bucket_name=${{ secrets.REACT_APP_BUCKET_NAME }}" \
+            -var="resource_owner_tag=${{ secrets.RESOURCE_OWNER_TAG }}" \
+            -var="alb_id=${{ secrets.AWS_ALB_ID }}" \
             -out=tfplan
 
       - name: Terraform Apply
@@ -137,11 +139,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 'lts/*'
 
       - name: Install semantic-release dependencies
         run: |
-          npm install -g semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/git @semantic-release/github
+          npm install @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/git @semantic-release/github
 
       - name: Release
         env:
