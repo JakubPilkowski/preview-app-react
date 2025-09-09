@@ -9,27 +9,16 @@ terraform {
   }
 
   backend "s3" {
-<<<<<<< HEAD
-    bucket         = "kalabanga-iac-bucket"
-    key            = "preview/react-app/terraform.tfstate"
-    region         = "eu-north-1"
-    dynamodb_table = "infrastructure-locks"
-=======
     bucket         = "PLACEHOLDER_S3_BUCKET"
     key            = "preview/react-app/terraform.tfstate"
     region         = "eu-north-1"
     dynamodb_table = "PLACEHOLDER_DYNAMODB_TABLE"
->>>>>>> 6773c31 (feat: initial React app setup with AWS infrastructure and CI/CD)
     encrypt        = true
   }
 }
 
 provider "aws" {
-<<<<<<< HEAD
-  region = "eu-north-1"
-=======
   region = var.aws_region
->>>>>>> 6773c31 (feat: initial React app setup with AWS infrastructure and CI/CD)
 }
 
 # Provider for WAF v2 (must be in us-east-1 for CloudFront)
@@ -40,11 +29,7 @@ provider "aws" {
 
 # S3 Bucket for React App
 resource "aws_s3_bucket" "react_app_bucket" {
-<<<<<<< HEAD
-  bucket = "preview-react-app-bucket"
-=======
   bucket = var.react_app_bucket_name
->>>>>>> 6773c31 (feat: initial React app setup with AWS infrastructure and CI/CD)
 }
 
 # S3 Bucket Public Access Block
@@ -111,8 +96,6 @@ resource "aws_cloudfront_origin_access_control" "react_app" {
   signing_protocol                  = "sigv4"
 }
 
-<<<<<<< HEAD
-=======
 # Origin Request Policy for React App API
 resource "aws_cloudfront_origin_request_policy" "react_app_api" {
   name    = "preview-react-app-api-policy"
@@ -154,7 +137,6 @@ data "aws_lb" "existing" {
   arn = "arn:aws:elasticloadbalancing:${var.aws_region}:${var.aws_account_id}:loadbalancer/app/${var.alb_name}/${var.alb_id}"
 }
 
->>>>>>> 6773c31 (feat: initial React app setup with AWS infrastructure and CI/CD)
 # CloudFront Distribution
 resource "aws_cloudfront_distribution" "react_app" {
   enabled             = true
@@ -165,9 +147,6 @@ resource "aws_cloudfront_distribution" "react_app" {
   origin {
     domain_name              = aws_s3_bucket.react_app_bucket.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.react_app.id
-<<<<<<< HEAD
-    origin_id                = "S3-preview-react-app-bucket"
-=======
     origin_id                = "S3-${var.react_app_bucket_name}"
   }
 
@@ -182,17 +161,12 @@ resource "aws_cloudfront_distribution" "react_app" {
       origin_protocol_policy = "http-only"
       origin_ssl_protocols   = ["TLSv1.2"]
     }
->>>>>>> 6773c31 (feat: initial React app setup with AWS infrastructure and CI/CD)
   }
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
-<<<<<<< HEAD
-    target_origin_id = "S3-preview-react-app-bucket"
-=======
     target_origin_id = "S3-${var.react_app_bucket_name}"
->>>>>>> 6773c31 (feat: initial React app setup with AWS infrastructure and CI/CD)
 
     forwarded_values {
       query_string = false
@@ -207,8 +181,6 @@ resource "aws_cloudfront_distribution" "react_app" {
     max_ttl                = 86400
   }
 
-<<<<<<< HEAD
-=======
   # API cache behavior for preview-server
   ordered_cache_behavior {
     path_pattern     = "/api/*"
@@ -227,7 +199,6 @@ resource "aws_cloudfront_distribution" "react_app" {
     }
   }
 
->>>>>>> 6773c31 (feat: initial React app setup with AWS infrastructure and CI/CD)
   # Handle SPA routing - redirect all requests to index.html
   custom_error_response {
     error_code         = 404
@@ -256,11 +227,7 @@ resource "aws_cloudfront_distribution" "react_app" {
     Name        = "kalabanga-preview-react-app"
     Environment = "preview"
     Project     = "preview-react-app"
-<<<<<<< HEAD
-    Owner       = "kalabanga"
-=======
     Owner       = var.resource_owner_tag
->>>>>>> 6773c31 (feat: initial React app setup with AWS infrastructure and CI/CD)
   }
 
   web_acl_id = aws_wafv2_web_acl.react_app.arn
