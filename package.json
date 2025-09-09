@@ -8,7 +8,7 @@
     "preview": "vite preview --port=4300",
     "test": "vitest",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "release": "node -r dotenv/config node_modules/.bin/semantic-release --no-ci"
+    "release": "semantic-release"
   },
   "private": true,
   "release": {
@@ -67,7 +67,6 @@
   "dependencies": {
     "@preview-workspace/preview-lib": "^2.2.3",
     "@radix-ui/react-dialog": "^1.1.14",
-    "dotenv": "^17.2.2",
     "nanoid": "^5.1.5",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -75,9 +74,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^11.0.5",
     "@swc-node/register": "~1.9.1",
     "@swc/cli": "~0.6.0",
     "@swc/core": "~1.5.7",
@@ -106,7 +102,6 @@
     "jiti": "2.4.2",
     "jsdom": "~22.1.0",
     "prettier": "^2.6.2",
-    "semantic-release": "^24.2.7",
     "ts-jest": "^29.4.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
