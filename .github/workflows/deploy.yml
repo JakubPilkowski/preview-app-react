@@ -30,7 +30,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: '1.5.0'
+          terraform_version: "1.5.0"
 
       - name: Replace placeholders in main.tf
         run: |
@@ -48,12 +48,16 @@ jobs:
             -var="aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}" \
             -var="react_app_bucket_name=${{ secrets.REACT_APP_BUCKET_NAME }}" \
             -var="resource_owner_tag=${{ secrets.RESOURCE_OWNER_TAG }}" \
-            -var="alb_id=${{ secrets.AWS_ALB_ID }}" \
-            -out=tfplan
+            -var="alb_id=${{ secrets.AWS_ALB_ID }}"
 
       - name: Terraform Apply
         working-directory: ./infrastructure
-        run: terraform apply -auto-approve tfplan
+        run: |
+          terraform apply -auto-approve \
+            -var="aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}" \
+            -var="react_app_bucket_name=${{ secrets.REACT_APP_BUCKET_NAME }}" \
+            -var="resource_owner_tag=${{ secrets.RESOURCE_OWNER_TAG }}" \
+            -var="alb_id=${{ secrets.AWS_ALB_ID }}"
 
       - name: Get Terraform Outputs
         id: terraform-outputs
@@ -77,8 +81,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
 
       - name: Cache dependencies
         uses: actions/cache@v4
@@ -139,7 +143,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
 
       - name: Install semantic-release dependencies
         run: |
