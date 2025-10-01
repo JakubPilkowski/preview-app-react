@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       cloudfront-distribution-id: ${{ steps.terraform-outputs.outputs.cloudfront_distribution_id }}
-      s3-bucket-name: ${{ steps.terraform-outputs.outputs.s3_bucket_name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -69,7 +68,6 @@ jobs:
       - name: Display infrastructure info
         run: |
           echo "✅ Infrastructure deployment completed successfully!"
-          echo "📦 S3 Bucket: ${{ steps.terraform-outputs.outputs.s3_bucket_name }}"
           echo "🔄 CloudFront Distribution ID: ${{ steps.terraform-outputs.outputs.cloudfront_distribution_id }}"
 
   build-and-deploy:
@@ -110,7 +108,7 @@ jobs:
 
       - name: Upload static assets to S3
         run: |
-          aws s3 sync ./dist s3://${{ needs.infra-build.outputs.s3-bucket-name }} --delete
+          aws s3 sync ./dist s3://${{ secrets.REACT_APP_BUCKET_NAME }} --delete
 
       - name: Invalidate CloudFront cache
         run: |
@@ -121,7 +119,6 @@ jobs:
       - name: Display deployment info
         run: |
           echo "✅ Deployment completed successfully!"
-          echo "📦 S3 Bucket: ${{ needs.infra-build.outputs.s3-bucket-name }}"
           echo "🔄 CloudFront Distribution ID: ${{ needs.infra-build.outputs.cloudfront-distribution-id }}"
 
   release:
