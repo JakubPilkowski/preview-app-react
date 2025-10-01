@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/JakubPilkowski/preview-app-react/compare/v1.0.0...v1.1.0) (2025-10-01)
+
+
+### Bug Fixes
+
+* back waf configuration ([4f96be9](https://github.com/JakubPilkowski/preview-app-react/commit/4f96be95d1881164b6c9936fcd8b4c3f82f3b8a7))
+
+
+### Features
+
+* disable WAF configuration ([50d89de](https://github.com/JakubPilkowski/preview-app-react/commit/50d89de3401c87c48d57641f7e10502d13cb904b))
+
 # 1.0.0 (2025-10-01)
 
 
