@@ -234,86 +234,86 @@ resource "aws_cloudfront_distribution" "react_app" {
 }
 
 # WAF Web ACL - DISABLED
-# resource "aws_wafv2_web_acl" "react_app" {
-#   provider = aws.us_east_1
-#   name        = "preview-react-app-waf"
-#   description = "WAF for Preview React App"
-#   scope       = "CLOUDFRONT"
+resource "aws_wafv2_web_acl" "react_app" {
+  provider = aws.us_east_1
+  name        = "preview-react-app-waf"
+  description = "WAF for Preview React App"
+  scope       = "CLOUDFRONT"
 
-#   default_action {
-#     allow {}
-#   }
+  default_action {
+    allow {}
+  }
 
-#   # AWS Managed Rules
-#   rule {
-#     name     = "AWSManagedRulesCommonRuleSet"
-#     priority = 1
+  # AWS Managed Rules
+  rule {
+    name     = "AWSManagedRulesCommonRuleSet"
+    priority = 1
 
-#     override_action {
-#       none {}
-#     }
+    override_action {
+      none {}
+    }
 
-#     statement {
-#       managed_rule_group_statement {
-#         name        = "AWSManagedRulesCommonRuleSet"
-#         vendor_name = "AWS"
-#       }
-#     }
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesCommonRuleSet"
+        vendor_name = "AWS"
+      }
+    }
 
-#     visibility_config {
-#       cloudwatch_metrics_enabled = true
-#       metric_name                = "AWSManagedRulesCommonRuleSetMetric"
-#       sampled_requests_enabled   = true
-#     }
-#   }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWSManagedRulesCommonRuleSetMetric"
+      sampled_requests_enabled   = true
+    }
+  }
 
-#   rule {
-#     name     = "AWSManagedRulesKnownBadInputsRuleSet"
-#     priority = 2
+  rule {
+    name     = "AWSManagedRulesKnownBadInputsRuleSet"
+    priority = 2
 
-#     override_action {
-#       none {}
-#     }
+    override_action {
+      none {}
+    }
 
-#     statement {
-#       managed_rule_group_statement {
-#         name        = "AWSManagedRulesKnownBadInputsRuleSet"
-#         vendor_name = "AWS"
-#       }
-#     }
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesKnownBadInputsRuleSet"
+        vendor_name = "AWS"
+      }
+    }
 
-#     visibility_config {
-#       cloudwatch_metrics_enabled = true
-#       metric_name                = "AWSManagedRulesKnownBadInputsRuleSetMetric"
-#       sampled_requests_enabled   = true
-#     }
-#   }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWSManagedRulesKnownBadInputsRuleSetMetric"
+      sampled_requests_enabled   = true
+    }
+  }
 
-#   rule {
-#     name     = "AWSManagedRulesAnonymousIpList"
-#     priority = 3
+  rule {
+    name     = "AWSManagedRulesAnonymousIpList"
+    priority = 3
 
-#     override_action {
-#       none {}
-#     }
+    override_action {
+      none {}
+    }
 
-#     statement {
-#       managed_rule_group_statement {
-#         name        = "AWSManagedRulesAnonymousIpList"
-#         vendor_name = "AWS"
-#       }
-#     }
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesAnonymousIpList"
+        vendor_name = "AWS"
+      }
+    }
 
-#     visibility_config {
-#       cloudwatch_metrics_enabled = true
-#       metric_name                = "AWSManagedRulesAnonymousIpListMetric"
-#       sampled_requests_enabled   = true
-#     }
-#   }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWSManagedRulesAnonymousIpListMetric"
+      sampled_requests_enabled   = true
+    }
+  }
 
-#   visibility_config {
-#     cloudwatch_metrics_enabled = true
-#     metric_name                = "PreviewReactAppWAFMetric"
-#     sampled_requests_enabled   = true
-#   }
-# }
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "PreviewReactAppWAFMetric"
+    sampled_requests_enabled   = true
+  }
+}
