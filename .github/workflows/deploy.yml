@@ -44,7 +44,7 @@ jobs:
       - name: Terraform Plan
         working-directory: ./infrastructure
         run: |
-          terraform plan \
+          terraform plan -lock=false \
             -var="aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}" \
             -var="react_app_bucket_name=${{ secrets.REACT_APP_BUCKET_NAME }}" \
             -var="resource_owner_tag=${{ secrets.RESOURCE_OWNER_TAG }}" \
@@ -53,7 +53,7 @@ jobs:
       - name: Terraform Apply
         working-directory: ./infrastructure
         run: |
-          terraform apply -auto-approve \
+          terraform apply -auto-approve -lock=false \
             -var="aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}" \
             -var="react_app_bucket_name=${{ secrets.REACT_APP_BUCKET_NAME }}" \
             -var="resource_owner_tag=${{ secrets.RESOURCE_OWNER_TAG }}" \
